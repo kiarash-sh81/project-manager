@@ -12,7 +12,7 @@ module.exports = class Apllication{
         const path = require('path');
         this.#app.use(this.#experss.json());
         this.#app.use(this.#experss.urlencoded({extended : true}));
-        this.#app.use(this.#experss.static("/public" ,path.join(__dirname , ".." , "public")));
+        this.#app.use(this.#experss.static(path.join(__dirname , ".." , "public")));
     }
     createServer(PORT){
         const http =require('http');
