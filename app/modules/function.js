@@ -11,9 +11,16 @@ function tokenGenerator(payload){
     return token;
 }
 
+function verifyJwtToken(token){
+    const reualt = jwt.verify(token , process.env.SECRET_KEY);
+    if(!reualt?.username) throw {status: 401 , success: false , message: "please login again 4"};
+    return reualt;
+}
+
 module.exports ={
     hashingString,
-    tokenGenerator
+    tokenGenerator,
+    verifyJwtToken
 }
 
 
