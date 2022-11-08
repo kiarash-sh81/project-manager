@@ -1,0 +1,10 @@
+###update user profile
+post http://localhost:3000/user/profile
+Authorization: bearer {{$dotenv TOKEN}}
+Content-Type: application/json
+
+{
+    "first_name":"",
+    "last_name":"",
+    "skills":["backend"]
+}
