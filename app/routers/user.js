@@ -1,10 +1,14 @@
 const {userController} = require('../http/controllers/user.controller');
 const { checkLogin } = require('../http/middlewares/autoLogin');
+const { expressValidatorMapper } = require('../http/middlewares/checkError');
+const { imageValidator } = require('../http/validation/user');
+const { upload_multer } = require('../modules/multer');
 
 const router = require('express').Router();
 
 router.get("/profile" , checkLogin ,userController.getProfile);
 router.post("/profile" , checkLogin , userController.editeProfile);
+router.post("/profile-image" ,upload_multer.single("image") , imageValidator() , expressValidatorMapper ,checkLogin  , userController.uploadProfileImage);
 
 module.exports = {
     userRouter : router

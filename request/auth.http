@@ -9,11 +9,12 @@ Content-Type: application/json
     "password":"123456",
     "confirm_password":"123456"
 }
-###register request
+###login register request
 Post http://localhost:3000/auth/login
 Content-Type: application/json
 Authorization: bearer {{$dotenv TOKEN}}
 
 {
-        
+    "username":"kiarash",
+    "password": "123456"     
 }
