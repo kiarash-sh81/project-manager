@@ -12,6 +12,7 @@ router.post("/create",fileUpload() , checkLogin,uploadFile , createProjectValida
 router.get("/get" , checkLogin , projectController.getAllProject);
 router.get("/get/:id" , checkLogin ,mongoIDValidation() ,expressValidatorMapper ,  projectController.getProjectById);
 router.delete("/delete/:id" , checkLogin , mongoIDValidation() , expressValidatorMapper , projectController.removeProject);
+router.put("/update/:id" , checkLogin , mongoIDValidation() , expressValidatorMapper , projectController.updateProject);
 
 module.exports = {
     projectRouter : router

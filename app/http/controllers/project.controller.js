@@ -70,8 +70,33 @@ class projectController{
     getProjectOfUser(){
 
     }
-    updateProject(){
-
+    async updateProject(req , res , next){
+        try {
+            const owner = req.user.id;
+            const id  =req.params.id;
+            const finding = await projectModel.findOne({owner , _id: id});
+            if(!finding) throw {status:404 , success: false , message: "project not founded"};
+            let data = {...req.body};
+            Object.entries(data).forEach(([key , value])=>{
+                if(!["title" , "text" , "tags"].includes(key)) delete data[key];
+                if(["" , " " , undefined ,null , NaN , 0].includes(value)) delete data[key];
+                if(key == "tags" && (data["tags"].constructor == Array)){
+                    data["tags"] = data["tags"].filter(val =>{
+                        if(!["" , " " , undefined ,null , NaN , 0].includes(val)) return val;
+                    })
+                    if(data["tags"].length == 0) delete data["tags"];
+                }
+            });
+            const updateResualt = await projectModel.updateOne({_id: id} , {$set :data});
+            if(updateResualt.modifiedCount == 0) throw {status: 500 , success: false , message: "cant update"};
+            return res.status(201).json({
+                status: 200,
+                success: true,
+                message: "update successfully"
+            });
+        } catch (error) {
+            next(error)
+        }
     }
 }
 module.exports ={
