@@ -3,9 +3,9 @@ const { projectModel } = require("../../models/project");
 class projectController{
     async creatProject(req , res , next){
         try {
-            const {title , text , image} = req.body;
+            const {title , text , image , tags} = req.body;
             const owner = req.user._id;
-            const resualt =await projectModel.create({title , text , owner , image});
+            const resualt =await projectModel.create({title , text , owner , image , tags});
             if(!resualt) throw {status: 500 , success: false , message: "project cant save"};
             return res.status(201).json({
                 status: 201 , 
@@ -16,8 +16,18 @@ class projectController{
             next(error)
         }
     }
-    getAllProject(){
-
+    async getAllProject(req , res , next){
+        try {
+            const owner = req.user._id;
+            const project = await projectModel.find({owner});
+            return res.status(200).json({
+                status:200,
+                success: true,
+                project
+            });
+        } catch (error) {
+            next(error)
+        }
     }
     getProjectById(){
 
