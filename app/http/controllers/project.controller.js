@@ -98,6 +98,25 @@ class projectController{
             next(error)
         }
     }
+    async updateProjectImage(req, res, next){
+        try {
+            const {image} = req.body;
+            const owner = req.user._id;
+            const {id} = req.params;
+            const finding =await projectModel.findOne({owner , _id: id});
+            if(!finding) throw {status: 404 , success:false , message: "the project you select does not existe!"};
+            const updating = await projectModel.updateOne({_id : id} , {$set:{image}});
+            if(updating.modifiedCount == 0) throw {status: 500 , success: false , message: "cant update project"};
+            return res.status(201).json({
+                status:201,
+                success: true,
+                message:"project image update successfully"
+            });
+            
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 module.exports ={
     projectController: new projectController()

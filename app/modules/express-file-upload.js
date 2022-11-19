@@ -5,7 +5,9 @@ const uploadFile = async (req , res , next)=>{
     try {
         if(Object.keys(req.files).length == 0 ) throw {status: 400 , success: false , message: "please upload an image"};
         let image = req.files.image;
-        let imagePath = path.join(createFilePath() ,(Date.now() +  path.extname(image.name)));
+        let type =  path.extname(image.name);
+        if(![".png" , ".jpeg" , ".jpg" , ".gif"].includes(type)) throw {status: 400 , success: false , message: "file format is not accepted"};
+        let imagePath = path.join(createFilePath() ,(Date.now() + type));
         req.body.image = imagePath; 
         let uploadPath = path.join(__dirname , ".." , ".." , imagePath);
         image.mv(uploadPath , (err)=>{
