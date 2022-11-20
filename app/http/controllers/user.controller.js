@@ -101,16 +101,31 @@ class userController{
             next(error)
         }
     }
+    async changeStatusRequest(req, res, next){
+        try {
+            const {id , status} = req.params;
+            const request = await userModel.findOne({"inviteRequest._id":id});
+            if(!request) throw {status:404 , success: false , message:"request not founded"};
+            const findRequest = request.inviteRequest.find(item=>item.id == id);
+            if(findRequest.status !== "pending") throw {status:400, success: false , message:"this request has been already accepted or rejected"};
+            if(!["accepted" , "rejected"].includes(status)) throw {status:400 , success: false , message:"sending information has not true"};
+            const updateResualt = await userModel.updateOne({"inviteRequest._id":id} , {
+                $set:{"inviteRequest.$.status": status}
+            });
+            if(updateResualt.modifiedCount == 0) throw {status: 500 , success:false , message: "changing invite not happend"};
+            return res.status(200).json({
+                status:200,
+                success:true,
+                message: "change invite successfully"
+            });
+        } catch (error) {
+            next(error)
+        }
+    }
     addSkills(){
 
     }
     editeSkills(){
-
-    }
-    acceptInviteInTeam(){
-
-    }
-    rejectInviteInTeam(){
 
     }
 }
