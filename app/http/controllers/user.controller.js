@@ -55,7 +55,52 @@ class userController{
             next(error)
         }
     }
-
+    async getAllRequest(req, res, next){
+        try {
+            const userID = req.user._id;
+            const {inviteRequest} = await userModel.findOne({_id: userID} , {inviteRequest:1});
+            return res.status(200).json({
+                status:200,
+                success:true,
+                inviteRequest
+            });
+        } catch (error) {
+            next(error)
+        }
+    }
+    async getRequestByStatus(req, res, next){
+        try {
+            const {status} =req.params;
+            const userID = req.user._id;
+            const requests = await userModel.aggregate([
+                {
+                    $match :{_id:userID}
+                },
+                {
+                    $project:{
+                        inviteRequest:1,
+                        _id:0,
+                        inviteRequest:{
+                            $filter:{
+                                input: "$inviteRequest",
+                                as: "request",
+                                cond:{
+                                    $eq : ["$$request.status" , status]
+                                }
+                            }
+                        },
+                        }
+                    },
+            ]);
+            return res.status(200).json({
+                status:200,
+                success:true,
+                requests:requests?.[0].inviteRequest || []
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
     addSkills(){
 
     }

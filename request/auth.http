@@ -3,9 +3,9 @@ Post http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "username": "mohammad",
-    "email":"mohammad@gmail.com",
-    "mobile":"09050204501",
+    "username": "arash",
+    "email":"arash@gmail.com",
+    "mobile":"09050565501",
     "password":"123456",
     "confirm_password":"123456"
 }
@@ -15,6 +15,6 @@ Content-Type: application/json
 Authorization: bearer {{$dotenv TOKEN}}
 
 {
-    "username":"kiarash",
+    "username":"mohammad",
     "password": "123456"     
 }

@@ -7,8 +7,10 @@ const { upload_multer } = require('../modules/multer');
 const router = require('express').Router();
 
 router.get("/profile" , checkLogin ,userController.getProfile);
+router.get("/requested" , checkLogin ,userController.getAllRequest);
 router.post("/profile" , checkLogin , userController.editeProfile);
 router.post("/profile-image" ,upload_multer.single("image") , imageValidator() , expressValidatorMapper ,checkLogin  , userController.uploadProfileImage);
+router.get("/requested/:status" , checkLogin ,userController.getRequestByStatus);
 
 module.exports = {
     userRouter : router
