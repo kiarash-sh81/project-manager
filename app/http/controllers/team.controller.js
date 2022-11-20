@@ -1,4 +1,5 @@
 const { teamModel } = require("../../models/team");
+const { userModel } = require("../../models/user");
 
 class teamController{
     async creatTeam(req ,res, next){
@@ -68,8 +69,34 @@ class teamController{
             next(error)
         }
     }
-    inviteUserToTeam(){
-
+    //* /team/invite/:teamID/:username
+    async inviteUserToTeam(req, res, next){
+        try {
+            const userID = req.user._id;
+            const teamID = req.params.teamID;
+            const username = req.params.username;
+            const checkInfo = await teamModel.findOne({$or:[{owner:userID},{users:userID}], _id:teamID});
+            if(!checkInfo) throw {status:404 , success: false  ,message: "team not founded"};
+            const user = await userModel.findOne({username});
+            if(!user) throw {status:404 , success: false, message: "user not founded to invite"};
+            const request = {
+                teamID,
+                caller: req.user.username,
+                requestDate: new Date(),
+                status:"pending"
+            }
+            const userInvited = await teamModel.findOne({$or:[{owner:user._id},{users:user._id}],_id:teamID});
+            if(userInvited) throw {status:400 , success: false , message:"this user has been already invited"};
+            const updateUserReasualt = await userModel.updateOne({username},{$push:{inviteRequest:request}});
+            if(updateUserReasualt.modifiedCount == 0) throw {status:500 , success: false , message: "cant send invite"};
+            return res.status(200).json({
+                status:200,
+                success: true,
+                message: "invite sent successfully"
+            });
+        } catch (error) {
+            next(error)
+        }
     }
     async removeTeamByID(req, res, next){
         try {

@@ -3,9 +3,9 @@ Post http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "username": "kiarash",
-    "email":"kiarashshahroudi@gmail.com",
-    "mobile":"09050107401",
+    "username": "mohammad",
+    "email":"mohammad@gmail.com",
+    "mobile":"09050204501",
     "password":"123456",
     "confirm_password":"123456"
 }
