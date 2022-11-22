@@ -114,8 +114,29 @@ class teamController{
             next(error)
         }
     }
-    updateTeam(){
-
+    async updateTeam(req, res, next){
+        try {
+            const data = {...req.body};
+            const userID = req.user._id;
+            const {teamID} = req.params;
+            Object.keys(data).forEach(key=>{
+                if(["" , " " , undefined, null , NaN].includes(data[key])) delete data[key];
+                if(!data[key]) delete data[key];
+            });
+            const finding = await teamModel.findOne({owner:userID , _id:teamID});
+            if(!finding) throw {status:404 , success:false, message:"team does not founded"};
+            const updating = await teamModel.updateOne({_id:teamID} , {
+                $set : data
+            });
+            if(updating.modifiedCount == 0) throw {status:500,success:false,message:"cant update the team"};
+            return res.status(200).json({
+                status:200,
+                success:true,
+                message:"post update successfuly"
+            });
+        } catch (error) {
+            next(error)
+        }
     }
     removeUserFromTeam(){
         
